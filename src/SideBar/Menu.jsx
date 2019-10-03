@@ -29,15 +29,27 @@ export default (props) => {
     items.length > 0 &&<List
       height={700}
       rowHeight={150}
-      width={800}
+      width={400}
       rowCount={items.length}
       overscanRowCount={10}
       rowRenderer={({ index, key, style }) => {
         const id = items[index];
         if (cache[id]!==undefined) {
-          return <MenuItem style={style} key={key} id={items[index]} item={cache[id]} setCache={setCache} />;
+          return (<MenuItem
+            style={style}
+            key={key}
+            id={items[index]}
+            item={cache[id]}
+            onItemClick={data => console.log(data)}
+          />);
         }
-        return <MenuItem style={style} key={key} id={items[index]} setCache={setCache}/>
+        return (<MenuItem
+          style={style}
+          key={key}
+          id={items[index]}
+          setCache={setCache}
+          onItemClick={data => console.log(data)}
+        />)
       }}
     />
   );
