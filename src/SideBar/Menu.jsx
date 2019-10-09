@@ -34,22 +34,25 @@ export default (props) => {
       overscanRowCount={10}
       rowRenderer={({ index, key, style }) => {
         const id = items[index];
-        if (cache[id]!==undefined) {
-          return (<MenuItem
-            style={style}
-            key={key}
-            id={items[index]}
-            item={cache[id]}
-            onItemClick={data => console.log(data)}
-          />);
+        const menuProps = {
+          style,
+          key,
+          id,
+          onItemClick: comment => props.onItemClick(comment),
         }
-        return (<MenuItem
-          style={style}
-          key={key}
-          id={items[index]}
-          setCache={setCache}
-          onItemClick={data => console.log(data)}
-        />)
+        if (cache[id] !== undefined) {
+          return (
+            <MenuItem
+              {...menuProps}
+              item={cache[id]}
+            />);
+        } else {
+          return (
+            <MenuItem
+              {...menuProps}
+              setCache={setCache}
+            />)
+        }
       }}
     />
   );

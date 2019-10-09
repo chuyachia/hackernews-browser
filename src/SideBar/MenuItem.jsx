@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { ajax } from "rxjs/ajax";
-import { flatMap, map, tap } from 'rxjs/operators';
-import { forkJoin, of } from "rxjs";
 
 export default (props) => {
   const [item, setItem] = useState(null);
@@ -9,12 +7,11 @@ export default (props) => {
 
   useEffect(() => {
     if (props.item === undefined) {
-      const item = ajax(__HACKER_NEWS_BASE__ + `/item/${props.id}.json`)
+      const item = ajax.getJSON(__HACKER_NEWS_BASE__ + `/item/${props.id}.json`)
       subscription = item.subscribe(
         res => {
-          const item = res.response;
-          props.setCache(props.id, item);
-          setItem(item);
+          props.setCache(props.id, res);
+          setItem(res);
         },
         err => console.error(err),
       );
@@ -27,31 +24,24 @@ export default (props) => {
     }
   }, [])
 
-  const fetchComment = (id) => {
-    return ajax.getJSON(__HACKER_NEWS_BASE__ + `/item/${id}.json`)
-  }
 
-  const fetchRecursive = (id) => {
-    return fetchComment(id).pipe(
-      map(comment => ({
-        parent: { ...comment, kids: [] },
-        kidIds: comment.kids || [],
-      })),
-      flatMap(comment => forkJoin([
-        of(comment.parent),
-        ...comment.kidIds.map(id=>fetchRecursive(id))
-      ])),
-      tap(([parent, ...kids]) => parent.kids = kids),
-      map(([parent]) => parent)
-    );
-  }
+  // const fetchRecursive = (id) => {
+  //   return fetchComment(id).pipe(
+  //     map(comment => ({
+  //       parent: { ...comment, kids: [] },
+  //       kidIds: comment && comment.kids || [],
+  //     })),
+  //     flatMap(comment => forkJoin([
+  //       of(comment.parent),
+  //       ...comment.kidIds.map(id=>fetchRecursive(id))
+  //     ])),
+  //     tap(([parent, ...kids]) => parent.kids = kids),
+  //     map(([parent]) => parent)
+  //   );
+  // }
 
   const handleItemClick = () => {
-    forkJoin(item.kids.map(comment=>fetchRecursive(comment)))
-    .subscribe(
-      res => props.onItemClick(res),
-      err => console.error(err),
-    )
+    props.onItemClick(item)
   }
 
   return (
