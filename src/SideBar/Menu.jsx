@@ -30,7 +30,7 @@ export default (props) => {
       height={650}
       rowHeight={150}
       width={400}
-      style={{ flex: '0 1 auto' }}
+      style={{ flex: '0 1 auto', position: 'sticky', top: 0 }}
       rowCount={items.length}
       overscanRowCount={10}
       rowRenderer={({ index, key, style }) => {
@@ -45,7 +45,7 @@ export default (props) => {
         if (cache[id] !== undefined) {
           menuProps.item = cache[id];
         }
-        
+
         return <MenuItem {...menuProps} />;
       }}
     />

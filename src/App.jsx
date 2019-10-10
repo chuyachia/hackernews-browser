@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ajax } from "rxjs/ajax";
-import { catchError, mergeMap } from 'rxjs/operators';
-import { of, from, forkJoin } from 'rxjs';
+import { catchError, mergeMap, takeUntil, delay } from 'rxjs/operators';
+import { of, from, Subject } from 'rxjs';
 
 import SideBar from './SideBar';
 import MainPage from './MainPage';
@@ -9,6 +9,8 @@ import MainPage from './MainPage';
 export default () => {
   const [activePost, setActivePost] = useState(undefined);
   const [comments, setComments] = useState({});
+
+  const postChange = new Subject();
 
   useEffect(() => {
     loadComments(activePost);
@@ -22,11 +24,12 @@ export default () => {
 
   const fetchComments = (ids) => {
     return from(ids).pipe(
-      mergeMap(id => fetchComment(id))
+      mergeMap(id => fetchComment(id)),
+      delay(5),
+      takeUntil(postChange)
     )
   }
 
-  // This creates multiple subscription, probably can use expand?
   const loadComments = (post) => {
     if (post === undefined || post.kids === undefined || post.kids.length === 0) {
       return;
@@ -48,7 +51,12 @@ export default () => {
 
   return (
     <div style={{ display: 'flex' }}>
-      <SideBar onItemClick={(post) => setActivePost(post)} />
+      <SideBar onItemClick={(post) => {
+        if (activePost !== undefined && post.id !== activePost.id) {
+          postChange.next();
+        }
+        setActivePost(post);
+      }} />
       <MainPage activePost={activePost} comments={comments}/>
     </div>
   )

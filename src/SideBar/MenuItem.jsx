@@ -46,10 +46,11 @@ export default (props) => {
 
   return (
     item && (
-      <div onClick={handleItemClick} style={props.style}>
+      <article onClick={handleItemClick} style={props.style}>
         <h5>{item.title}</h5>
         <p>by {item.by}</p>
+        <small>{`${item.kids ? item.kids.length : 0} comments`}</small>
         <a href={item.url}>go to page</a>
-      </div>)
+      </article>)
   )
 };
