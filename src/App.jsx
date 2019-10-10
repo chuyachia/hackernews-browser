@@ -24,9 +24,9 @@ export default () => {
     return from(ids).pipe(
       mergeMap(id => fetchComment(id))
     )
-    // return forkJoin(ids.map(id => fetchComment(id)));
   }
 
+  // This creates multiple subscription, probably can use expand?
   const loadComments = (post) => {
     if (post === undefined || post.kids === undefined || post.kids.length === 0) {
       return;
@@ -36,30 +36,15 @@ export default () => {
       .subscribe(
         comment => {
           if(comment != undefined) {
-            // handleAddComment(comment);
-            setComments((prevComments) => ({ ...prevComments, [comment.id]: comment }));
+            setComments((prevComments) => ({
+              ...prevComments, [comment.id]: comment
+            }));
             loadComments(comment);
           }
         },
         err => console.error(err),
       )
   }
-
-  // const addComment = (parentComment, comment) => {
-  //   if (parentComment.kidNodes=== undefined) {
-  //     parentComment.kidNodes = [];
-  //   }
-  //   if (comment.parent === parentComment.id) {
-  //     parentComment.kidNodes = [...parentComment.kidNodes, { id: comment.id, kids: comment.kids }];
-  //     setComments((prevComments) => ({ ...prevComments, [comment.id]: comment }));
-  //   } else {
-  //     parentComment.kidNodes.forEach(c => addComment(c,comment));
-  //   }
-  // }
-
-  // const handleAddComment = (comment) => {
-  //   addComment(activePost,comment);
-  // }
 
   return (
     <div style={{ display: 'flex' }}>

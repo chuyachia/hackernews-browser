@@ -25,11 +25,12 @@ export default (props) => {
     cache[id] = item;
   }
 
-  return (
-    items.length > 0 &&<List
-      height={700}
+  return (items.length > 0 &&
+    <List
+      height={650}
       rowHeight={150}
       width={400}
+      style={{ flex: '0 1 auto' }}
       rowCount={items.length}
       overscanRowCount={10}
       rowRenderer={({ index, key, style }) => {
@@ -38,21 +39,14 @@ export default (props) => {
           style,
           key,
           id,
+          setCache,
           onItemClick: comment => props.onItemClick(comment),
         }
         if (cache[id] !== undefined) {
-          return (
-            <MenuItem
-              {...menuProps}
-              item={cache[id]}
-            />);
-        } else {
-          return (
-            <MenuItem
-              {...menuProps}
-              setCache={setCache}
-            />)
+          menuProps.item = cache[id];
         }
+        
+        return <MenuItem {...menuProps} />;
       }}
     />
   );
