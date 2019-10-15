@@ -6,6 +6,9 @@ import { of, from, Subject } from 'rxjs';
 import SideBar from './SideBar';
 import MainPage from './MainPage';
 
+import 'normalize.css';
+import './App.scss';
+
 export default () => {
   const [activePost, setActivePost] = useState(undefined);
   const [comments, setComments] = useState({});
@@ -50,13 +53,16 @@ export default () => {
   }
 
   return (
-    <div style={{ display: 'flex' }}>
-      <SideBar onItemClick={(post) => {
-        if (activePost !== undefined && post.id !== activePost.id) {
-          postChange.next();
-        }
-        setActivePost(post);
-      }} />
+    <div className="app">
+      <SideBar
+        onItemClick={(post) => {
+          if (activePost !== undefined && post.id !== activePost.id) {
+            postChange.next();
+          }
+          setActivePost(post);
+        }}
+        activePostId={activePost !== undefined ? activePost.id : null}
+      />
       <MainPage activePost={activePost} comments={comments}/>
     </div>
   )

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import Comment from "./Comment";
 
+
 export default (props) => {
 
   const renderComment = (id) => {
@@ -10,10 +11,10 @@ export default (props) => {
       return;
     } else {
       return (
-        <div key={comment.id} style={{ paddingLeft: '5px' }}>
+        <div className="comment" key={comment.id}>
           <Comment {...comment}/>
           {comment.kids !== undefined && comment.kids.length > 0 &&
-            <div style={{ paddingLeft: '5px' }}>{comment.kids.map(id => renderComment(id))}</div>}
+            <div className="comment">{comment.kids.map(id => renderComment(id))}</div>}
         </div>
       )
     }
@@ -21,7 +22,7 @@ export default (props) => {
 
 
   return (
-    <main style={{ flex: '1 1 800px' }}>
+    <main>
       {props.activePost !== undefined &&
         props.activePost.kids !== undefined &&
         props.activePost.kids.map(id => renderComment(id))

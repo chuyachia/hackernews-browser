@@ -12,6 +12,9 @@ export default (props) => {
         res => {
           props.setCache(props.id, res);
           setItem(res);
+          if (props.index === 0) {
+            props.onItemClick(res);
+          }
         },
         err => console.error(err),
       );
@@ -46,11 +49,11 @@ export default (props) => {
 
   return (
     item && (
-      <article onClick={handleItemClick} style={props.style}>
-        <h5>{item.title}</h5>
+      <article className="menu-item" style={props.style}>
+        <h5 onClick={handleItemClick} className={props.active?'active':''}>{item.title}</h5>
         <p>by {item.by}</p>
         <small>{`${item.kids ? item.kids.length : 0} comments`}</small>
-        <a href={item.url}>go to page</a>
+        <div className="hyperlink"><a href={item.url}>open page</a></div>
       </article>)
   )
 };

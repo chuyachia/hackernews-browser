@@ -3,8 +3,10 @@ import React from "react";
 export default (props) => {
   return (
     <article>
-      <p>{props.text}</p>
-      <small>{props.by}</small>
+      <h6>{`${props.by} said :`}</h6>
+      <p dangerouslySetInnerHTML={{
+        __html:props.text
+      }}/>
     </article>
   ) 
 }

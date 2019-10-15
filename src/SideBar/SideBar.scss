@@ -1,0 +1,22 @@
+@import '../variables.scss';
+
+.menu-item {
+  h5 {
+    margin:0;
+    background: $grey;
+    padding: $padding;
+    cursor: pointer;
+  }
+  h5.active {
+    background: $black;
+    color:$grey;
+  }
+  h5:after {
+    content:'';
+    border: solid $black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: translateX(100%) rotate(-45deg);
+  }
+}

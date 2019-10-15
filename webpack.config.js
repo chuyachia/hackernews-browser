@@ -20,11 +20,12 @@ module.exports = (env, arg) => {
           exclude: /node_modules/,
         },
         {
-          test: /\.(css|sass)$/,
+          test: /\.(css|s[ac]ss)$/,
           loader: ["style-loader","css-loader","sass-loader"],
         }
       ]
     },
+    devtool: arg.mode === 'development' ? 'cheap-source-map' : false,
     devServer: {
       port: 8080,
       contentBase: path.resolve(__dirname, "dist"),

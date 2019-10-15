@@ -1,0 +1,24 @@
+@import './variables.scss';
+
+body {
+  color: $black;
+  font-family: $sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+.app {
+  padding: 0 $padding 0 $padding;
+  display: flex;
+  aside {
+    flex: 0 1 auto;
+    position: sticky;
+    top: 0 ;
+    height: 100vh;
+  }
+  main {
+    flex: 1 1 800px;
+  }
+}

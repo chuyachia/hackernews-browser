@@ -10,9 +10,9 @@ export default (props) => {
   let cache = {};
 
   useEffect(() => {
-    const items = ajax(__HACKER_NEWS_BASE__ + "/topstories.json") 
+    const items = ajax.getJSON(__HACKER_NEWS_BASE__ + "/topstories.json") 
     subscription = items.subscribe(
-      res => setItems(res.response),
+      res => setItems(res),
       err => console.error(err),
     );
     
@@ -25,29 +25,32 @@ export default (props) => {
     cache[id] = item;
   }
 
-  return (items.length > 0 &&
-    <List
-      height={650}
-      rowHeight={150}
-      width={400}
-      style={{ flex: '0 1 auto', position: 'sticky', top: 0 }}
-      rowCount={items.length}
-      overscanRowCount={10}
-      rowRenderer={({ index, key, style }) => {
-        const id = items[index];
-        const menuProps = {
-          style,
-          key,
-          id,
-          setCache,
-          onItemClick: comment => props.onItemClick(comment),
-        }
-        if (cache[id] !== undefined) {
-          menuProps.item = cache[id];
-        }
+  const rowRenderer = ({ index, key, style }) => {
+    const id = items[index];
+    const menuProps = {
+      style,
+      key,
+      id,
+      setCache,
+      index,
+      onItemClick: comment => props.onItemClick(comment),
+    }
+    if (cache[id] !== undefined) {
+      menuProps.item = cache[id];
+    }
 
-        return <MenuItem {...menuProps} />;
-      }}
-    />
-  );
+    return <MenuItem {...menuProps} active={props.activePostId === id} />;
+  }
+
+  return <aside>
+    {items.length > 0 &&
+      <List
+        height={650}
+        rowHeight={200}
+        width={400}
+        rowCount={items.length}
+        overscanRowCount={10}
+        rowRenderer={rowRenderer}
+      />}
+  </aside>;
 }
