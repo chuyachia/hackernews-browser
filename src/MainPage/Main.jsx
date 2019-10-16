@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 
 import Comment from "./Comment";
+import { safeGet } from '../util';
 
 
 export default (props) => {
@@ -13,8 +14,9 @@ export default (props) => {
       return (
         <div className="comment" key={comment.id}>
           <Comment {...comment}/>
-          {comment.kids !== undefined && comment.kids.length > 0 &&
-            <div className="comment">{comment.kids.map(id => renderComment(id))}</div>}
+          <div className="comment">
+            {safeGet(['kids'], comment, []).map(id => renderComment(id))}
+          </div>
         </div>
       )
     }
@@ -23,10 +25,7 @@ export default (props) => {
 
   return (
     <main>
-      {props.activePost !== undefined &&
-        props.activePost.kids !== undefined &&
-        props.activePost.kids.map(id => renderComment(id))
-      }
+      {safeGet(['activePost', 'kids'], props, []).map(id => renderComment(id))}
     </main>
   )
 }

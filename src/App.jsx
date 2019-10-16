@@ -5,6 +5,7 @@ import { of, from, Subject } from 'rxjs';
 
 import SideBar from './SideBar';
 import MainPage from './MainPage';
+import { safeGet } from './util';
 
 import 'normalize.css';
 import './App.scss';
@@ -56,12 +57,12 @@ export default () => {
     <div className="app">
       <SideBar
         onItemClick={(post) => {
-          if (activePost !== undefined && post.id !== activePost.id) {
+          if (post.id !== safeGet(['id'], activePost)) {
             postChange.next();
           }
           setActivePost(post);
         }}
-        activePostId={activePost !== undefined ? activePost.id : null}
+        activePostId={safeGet(['id'], activePost)}
       />
       <MainPage activePost={activePost} comments={comments}/>
     </div>

@@ -3,6 +3,7 @@ import { ajax } from "rxjs/ajax";
 import { List } from "react-virtualized";
 
 import MenuItem from './MenuItem';
+import { safeGet } from '../util';
 
 export default (props) => {
   const [items, setItems] = useState([]);
@@ -42,15 +43,14 @@ export default (props) => {
     return <MenuItem {...menuProps} active={props.activePostId === id} />;
   }
 
-  return <aside>
-    {items.length > 0 &&
-      <List
-        height={650}
-        rowHeight={200}
-        width={400}
-        rowCount={items.length}
-        overscanRowCount={10}
-        rowRenderer={rowRenderer}
-      />}
-  </aside>;
+  return (<aside>
+    <List
+      height={650}
+      rowHeight={200}
+      width={400}
+      rowCount={safeGet(['length'], items, 0)}
+      overscanRowCount={10}
+      rowRenderer={rowRenderer}
+    />
+  </aside>);
 }
