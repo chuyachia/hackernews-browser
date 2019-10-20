@@ -15,6 +15,17 @@ export default () => {
   const [comments, setComments] = useState({});
 
   const postChange = new Subject();
+  let postChangeSubscription;
+
+  useEffect(() => {
+    postChangeSubscription = postChange.subscribe(
+      () => {
+        setComments({});
+      }
+    );
+
+    return () => postChangeSubscription.unsubscribe();
+  }, [postChange])
 
   useEffect(() => {
     loadComments(activePost);
@@ -56,13 +67,13 @@ export default () => {
   return (
     <div className="app">
       <SideBar
-        onItemClick={(post) => {
+        setActivePost={(post) => {
           if (post.id !== safeGet(['id'], activePost)) {
-            postChange.next();
+            setComments({});
+            postChange.next(post.id);
           }
           setActivePost(post);
         }}
-        activePostId={safeGet(['id'], activePost)}
       />
       <MainPage activePost={activePost} comments={comments}/>
     </div>

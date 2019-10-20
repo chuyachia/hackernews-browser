@@ -25,7 +25,10 @@ export default (props) => {
 
   return (
     <main>
-      {safeGet(['activePost', 'kids'], props, []).map(id => renderComment(id))}
+      {safeGet(['activePost', 'kids'], props, []) === 0 || Object.keys(props.comments).length === 0 ?
+        "No comment to show"
+        : safeGet(['activePost', 'kids'], props, []).map(id => renderComment(id))
+      }
     </main>
   )
 }

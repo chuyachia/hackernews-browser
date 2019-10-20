@@ -7,6 +7,7 @@ import { safeGet } from '../util';
 
 export default (props) => {
   const [items, setItems] = useState([]);
+  const [activePostId, setActivePostId] = useState(undefined);
   let subscription;
   let cache = {};
 
@@ -34,13 +35,14 @@ export default (props) => {
       id,
       setCache,
       index,
-      onItemClick: comment => props.onItemClick(comment),
+      setActivePostId: id => setActivePostId(id),
+      setActivePost : post =>props.setActivePost(post)
     }
     if (cache[id] !== undefined) {
       menuProps.item = cache[id];
     }
 
-    return <MenuItem {...menuProps} active={props.activePostId === id} />;
+    return <MenuItem {...menuProps} active={id === activePostId} />;
   }
 
   return (<aside>
@@ -51,6 +53,9 @@ export default (props) => {
       rowCount={safeGet(['length'], items, 0)}
       overscanRowCount={10}
       rowRenderer={rowRenderer}
+      scrollToAlignment="start"
+      onRowsRendered={({ startIndex }) => setActivePostId(items[startIndex])}
+      scrollToIndex={activePostId ? items.indexOf(activePostId) : 0}
     />
   </aside>);
 }

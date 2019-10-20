@@ -4,49 +4,34 @@ import { ajax } from "rxjs/ajax";
 import { safeGet } from '../util';
 
 export default (props) => {
-  const [item, setItem] = useState(null);
+  const [item, setItem] = useState(undefined);
   let subscription;
+  
+  useEffect(()=> {
+    if (props.active && item !== undefined) {
+      props.setActivePost(item);
+    }
 
+  },[props.active,item])
+ 
   useEffect(() => {
-    if (props.item === undefined) {
+    if (item === undefined) {
       const item = ajax.getJSON(__HACKER_NEWS_BASE__ + `/item/${props.id}.json`)
       subscription = item.subscribe(
         res => {
           props.setCache(props.id, res);
           setItem(res);
-          if (props.index === 0) {
-            props.onItemClick(res);
-          }
         },
         err => console.error(err),
       );
-    } else {
-      setItem(props.item);
     }
-    
     return () => {
-      if (subscription !== undefined) subscription.unsubscribe(); 
+      if (subscription !== undefined) subscription.unsubscribe();
     }
-  }, [])
-
-
-  // const fetchRecursive = (id) => {
-  //   return fetchComment(id).pipe(
-  //     map(comment => ({
-  //       parent: { ...comment, kids: [] },
-  //       kidIds: comment && comment.kids || [],
-  //     })),
-  //     flatMap(comment => forkJoin([
-  //       of(comment.parent),
-  //       ...comment.kidIds.map(id=>fetchRecursive(id))
-  //     ])),
-  //     tap(([parent, ...kids]) => parent.kids = kids),
-  //     map(([parent]) => parent)
-  //   );
-  // }
+  }, [props.id])
 
   const handleItemClick = () => {
-    props.onItemClick(item)
+    props.setActivePostId(item.id);
   }
 
   return (
