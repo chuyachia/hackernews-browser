@@ -11,11 +11,25 @@ import 'normalize.css';
 import './App.scss';
 
 export default () => {
+  const [topPostIds, setTopStoryIds] = useState([]);
   const [activePost, setActivePost] = useState(undefined);
   const [comments, setComments] = useState({});
 
   const postChange = new Subject();
   let postChangeSubscription;
+  let subscription;
+
+  useEffect(() => {
+    const items = ajax.getJSON(__HACKER_NEWS_BASE__ + "/topstories.json") 
+    subscription = items.subscribe(
+      res => setTopStoryIds(res),
+      err => console.error(err),
+    );
+    
+    return () => {
+      subscription.unsubscribe();
+    }
+  }, [])
 
   useEffect(() => {
     postChangeSubscription = postChange.subscribe(
@@ -67,6 +81,7 @@ export default () => {
   return (
     <div className="app">
       <SideBar
+        postIds={topPostIds}
         setActivePost={(post) => {
           if (post.id !== safeGet(['id'], activePost)) {
             setComments({});

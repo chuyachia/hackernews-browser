@@ -1,34 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { ajax } from "rxjs/ajax";
+import React, { useState } from "react";
 import { List } from "react-virtualized";
 
 import MenuItem from './MenuItem';
 import { safeGet } from '../util';
 
 export default (props) => {
-  const [items, setItems] = useState([]);
   const [activePostId, setActivePostId] = useState(undefined);
-  let subscription;
   let cache = {};
-
-  useEffect(() => {
-    const items = ajax.getJSON(__HACKER_NEWS_BASE__ + "/topstories.json") 
-    subscription = items.subscribe(
-      res => setItems(res),
-      err => console.error(err),
-    );
-    
-    return () => {
-      subscription.unsubscribe();
-    }
-  }, [])
 
   const setCache = (id,item) => {
     cache[id] = item;
   }
 
   const rowRenderer = ({ index, key, style }) => {
-    const id = items[index];
+    const id = props.postIds[index];
     const menuProps = {
       style,
       key,
@@ -50,12 +35,10 @@ export default (props) => {
       height={650}
       rowHeight={200}
       width={400}
-      rowCount={safeGet(['length'], items, 0)}
+      rowCount={safeGet(['length'], props.postIds, 0)}
       overscanRowCount={10}
       rowRenderer={rowRenderer}
-      scrollToAlignment="start"
-      onRowsRendered={({ startIndex }) => setActivePostId(items[startIndex])}
-      scrollToIndex={activePostId ? items.indexOf(activePostId) : 0}
+      onRowsRendered={({ startIndex, stopIndex }) => setActivePostId(props.postIds[startIndex === 0 ? startIndex : Math.floor((startIndex + stopIndex) / 2)])}
     />
   </aside>);
 }
