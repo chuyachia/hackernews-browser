@@ -60,7 +60,7 @@ export default () => {
   }
 
   const loadComments = (post) => {
-    if (post === undefined || post.kids === undefined || post.kids.length === 0) {
+    if (post === undefined || !Array.isArray(post.kids)) {
       return;
     }
 
@@ -78,17 +78,19 @@ export default () => {
       )
   }
 
+  const changeActivePost = (post) => {
+    if (post.id !== safeGet(['id'], activePost)) {
+      setComments({});
+      postChange.next(post.id);
+    }
+    setActivePost(post);
+  }
+
   return (
     <div className="app">
       <SideBar
         postIds={topPostIds}
-        setActivePost={(post) => {
-          if (post.id !== safeGet(['id'], activePost)) {
-            setComments({});
-            postChange.next(post.id);
-          }
-          setActivePost(post);
-        }}
+        onActivePostChange={changeActivePost}
       />
       <MainPage activePost={activePost} comments={comments}/>
     </div>

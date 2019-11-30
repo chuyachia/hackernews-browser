@@ -9,7 +9,7 @@ export default (props) => {
   
   useEffect(()=> {
     if (props.active && item !== undefined) {
-      props.setActivePost(item);
+      props.onActivePostChange(item);
     }
 
   },[props.active,item])
@@ -31,7 +31,7 @@ export default (props) => {
   }, [props.id])
 
   const handleItemClick = () => {
-    props.setActivePostId(item.id);
+    props.onItemClick(item.id);
   }
 
   return (

@@ -20,8 +20,8 @@ export default (props) => {
       id,
       setCache,
       index,
-      setActivePostId: id => setActivePostId(id),
-      setActivePost : post =>props.setActivePost(post)
+      onItemClick: setActivePostId,
+      onActivePostChange : props.onActivePostChange,
     }
     if (cache[id] !== undefined) {
       menuProps.item = cache[id];
@@ -30,15 +30,20 @@ export default (props) => {
     return <MenuItem {...menuProps} active={id === activePostId} />;
   }
 
-  return (<aside>
-    <List
-      height={650}
-      rowHeight={200}
-      width={400}
-      rowCount={safeGet(['length'], props.postIds, 0)}
-      overscanRowCount={10}
-      rowRenderer={rowRenderer}
-      onRowsRendered={({ startIndex, stopIndex }) => setActivePostId(props.postIds[startIndex === 0 ? startIndex : Math.floor((startIndex + stopIndex) / 2)])}
-    />
-  </aside>);
+  const setMiddlePostActive = ({ overscanStartIndex, startIndex, stopIndex }) => {
+    setActivePostId(overscanStartIndex == startIndex ? props.postIds[0] : props.postIds[Math.floor((startIndex + stopIndex) / 2)]);
+  }
+
+  return (
+    <aside>
+      <List
+        height={650}
+        rowHeight={200}
+        width={400}
+        rowCount={safeGet(['length'], props.postIds, 0)}
+        overscanRowCount={10}
+        rowRenderer={rowRenderer}
+        onRowsRendered={setMiddlePostActive}
+      />
+    </aside>);
 }
