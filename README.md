@@ -7,5 +7,4 @@ This app utilizes react-virtualized and rxjs to minimize overheads due to large 
 * Uses react-virtualized so that calls to fetch post details are fired only when the post is scrolled in view
 * Uses rxjs to subscribe to new fetch comment results and unsubscribe to old ones on active post changed to avoid unneeded fetch comment calls
 
-Start application in dev server:
-```npm run start```
+Live version : https://hackernews-browser.herokuapp.com/
